@@ -18,8 +18,6 @@ class ActorsModule extends AbstractModule with ScalaModule {
   @Provides
   def provideDataServiceActor(system: ActorSystem): DataServiceActor = {
     TypedActor(system).typedActorOf(TypedProps[DataServiceActorImpl]())
-    // Question 1: Is there a better way to bind?
-    // Question 2: Should actors be stopped after each use?
   }
 
 }

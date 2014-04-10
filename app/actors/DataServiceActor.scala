@@ -1,8 +1,8 @@
 package actors
 
-import scala.concurrent._
 import akka.actor.TypedActor._
 import play.api.Logger
+import scala.concurrent._
 import scala.util.Random
 
 trait DataServiceActor {
@@ -11,15 +11,18 @@ trait DataServiceActor {
 
 class DataServiceActorImpl extends DataServiceActor with PreStart with PostStop {
 
+  val actorId = Random.nextInt;
+
   def getData(key: String): Future[String] = {
-    val fakeData = Random.nextInt.toString
-    Future.successful(fakeData)
+    val fakeData = actorId.toString
+    context.stop(context.self) // Release this per-request actor.
+    return Future.successful(fakeData)
   }
 
   override def postStop() =
-    Logger.info("DataServiceActorImpl stopped")
+    Logger.info(s"DataServiceActorImpl $actorId stopped")
 
   override def preStart() =
-    Logger.info("DataServiceActorImpl started")
+    Logger.info(s"DataServiceActorImpl $actorId started")
 
 }
